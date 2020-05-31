@@ -4,7 +4,7 @@ var bodyParser = 	require("body-parser");
 var Campground = 	require("./models/campground");
 var Comment = 		require("./models/comment");
 // var User = 		require("./models/user");
-var seedDB = 		require("./seeds");
+// var seedDB = 		require("./seeds");
 var mongoose = 		require("mongoose");
 
 // Acquiring routes
@@ -21,7 +21,7 @@ mongoose.set('useUnifiedTopology', true);
 mongoose.connect("mongodb://localhost/yelpcamp", { useNewUrlParser: true } );
 
 // Seeding the DB with some data for testing
-seedDB();
+// seedDB();
 
 app.get("/", function(req,res){
 	res.render("campgrounds/landing");
