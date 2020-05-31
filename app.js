@@ -30,7 +30,9 @@ app.get("/", function(req,res){
 app.get("*", function(req,res){
 	res.send("This page is not available!");
 });
-app.listen(3000, function() {
+
+var port = process.env.PORT || 3000;
+app.listen(port, function() {
 	console.log("YelpCamp server is up!");
 });
 
