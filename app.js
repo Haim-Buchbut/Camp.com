@@ -18,8 +18,11 @@ app.use(express.static("public"));
 app.use(campgroundsRoutes);
 app.use(commentsRoutes);
 mongoose.set('useUnifiedTopology', true);
+
+// console.log(process.env.DATABASEURL);
 // mongoose.connect("mongodb://localhost/yelpcamp", { 
-mongoose.connect("mongodb+srv://haimbuchbut:Adush123@cluster0-dkoym.mongodb.net/test?retryWrites=true&w=majority", { 
+mongoose.connect(process.env.DATABASEURL, { 
+// mongoose.connect("mongodb+srv://haimbuchbut:Adush123@cluster0-dkoym.mongodb.net/test?retryWrites=true&w=majority", { 
 	useNewUrlParser: true,
 	useCreateIndex: true 
 }, function() {
