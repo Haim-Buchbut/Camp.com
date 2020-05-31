@@ -18,7 +18,15 @@ app.use(express.static("public"));
 app.use(campgroundsRoutes);
 app.use(commentsRoutes);
 mongoose.set('useUnifiedTopology', true);
-mongoose.connect("mongodb://localhost/yelpcamp", { useNewUrlParser: true } );
+// mongoose.connect("mongodb://localhost/yelpcamp", { 
+mongoose.connect("mongodb+srv://haimbuchbut:Adush123@cluster0-dkoym.mongodb.net/test?retryWrites=true&w=majority", { 
+	useNewUrlParser: true,
+	useCreateIndex: true 
+}, function() {
+	console.log("Connected to DB!")
+});
+
+
 
 // Seeding the DB with some data for testing
 // seedDB();
