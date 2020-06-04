@@ -3,6 +3,7 @@ var bodyParser = 		require("body-parser");
 var mongoose = 			require("mongoose");
 var passport =			require("passport");
 var LocalStrategy = 	require("passport-local");
+var flash =				require("connect-flash");
 var Campground = 		require("./models/campground");
 var Comment = 			require("./models/comment");
 var User = 				require("./models/user");
@@ -32,6 +33,7 @@ app.set("view engine","ejs");
 app.use(express.static(__dirname + "public"));
 app.use(methodOverride('_method'))
 // seedDB(); // Seeding the DB with initial data for testing
+app.use(flash());
 
 // Configuring passport for authentication
 app.use(require("express-session")({
@@ -47,6 +49,8 @@ passport.deserializeUser(User.deserializeUser());
 // passport.use(User.createStrategy()); enable using different username name (e.g. email). See here: https://www.npmjs.com/package/passport-local-mongoose#simplified-passportpassport-local-configuration
 app.use(function(req,res,next){
    	res.locals.currentUser = req.user;
+   	res.locals.successMsg = req.flash("successMsg");
+   	res.locals.errorMsg = req.flash("errorMsg");
 	next();
 });
 

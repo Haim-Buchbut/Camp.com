@@ -13,7 +13,9 @@ app.use(methodOverride("_method"));
 router.get("/campgrounds", function(req,res){
 	Campground.find( {},function(err,campgroundsFromDB) {
 		if(err) {
+			req.flash("errorMsg", "We experiencing technical problems and can't show the available campgrounds");
 			console.log("Could not retrieve campgrounds from the DB");
+			res.redirect("/");
 		} else {
 			res.render("campgrounds/index.ejs", {campgrounds:campgroundsFromDB});
 		}
@@ -34,7 +36,9 @@ router.post("/campgrounds", middleware.isLoggedIn, function(req,res){
 			if(err) {
 				console.log("Failed to save a new campground");
 				console.log(err);
+				req.flash("errorMsg", "We could not add the campground. Please try again later.");
 			} else {
+				req.flash("successMsg","You successfully added a new campground");
 				res.redirect("/campgrounds");
 			}
 		}
@@ -55,6 +59,7 @@ router.put("/campgrounds/:id/", middleware.hasPermissionForCampground, function(
 	var desc = req.body.desc;
 	var updatedCampground = {name:name, image:image, desc:desc};
 	Campground.findByIdAndUpdate(req.params.id, updatedCampground, function(err, campground){
+		req.flash("successMsg","The campground was successfully updated");
 		res.redirect("/campgrounds/" + req.params.id);	
 	});
 }); 
@@ -66,6 +71,7 @@ router.delete("/campgrounds/:id/", middleware.hasPermissionForCampground, functi
 			if(err)
 				console.log(err);
 		});
+		req.flash("successMsg","The campground was successfully deleted");
 		res.redirect("/campgrounds");	
 	});
 }); 
@@ -74,6 +80,7 @@ router.delete("/campgrounds/:id/", middleware.hasPermissionForCampground, functi
 router.get("/campgrounds/:id", function(req,res){
 	Campground.findById({_id: req.params.id}).populate("comments").exec(function(err,reqCampground){
 		if(err) {
+			req.flash("errorMsg", "We could not find the requested campground");
 			console.log("Could not find the requested campground");
 		} else {
 			res.render("campgrounds/show.ejs", {campground: reqCampground});	

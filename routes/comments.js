@@ -23,13 +23,13 @@ router.post("/campgrounds/:campgroundId/comments", middleware.isLoggedIn, functi
 			console.log(err);
 			res.redirect("campgrounds/");
 		} else {
-			console.log("Found the campground");
 			var comment = Comment( {
 				text : req.body.comment
 			});
 			Comment.create(comment,function(err,newComment) {
 				if(err) {
 					console.log(err);
+					req.flash("errorMsg", "We could not add the comment. Please try again later.");
 					res.redirect("campgrounds/" + req.params.campgroundId);					
 				} else {
 					comment.author._id = req.user._id;
@@ -37,6 +37,7 @@ router.post("/campgrounds/:campgroundId/comments", middleware.isLoggedIn, functi
 					comment.save();
 					campground.comments.push(newComment);
 					campground.save();
+					req.flash("successMsg","You successfully added a comment");
 					res.redirect("/campgrounds/" + campground._id);					
 				}				
 			});
