@@ -16,25 +16,38 @@
 				<div class="caption-full" id="campgroundDetails">
 					<h4 class="pull-right">$9</h4>
 					<h4><a><%= campground.name %></a></h4>
-					<p><%= campground.desc %></p>			
+					<p><%= campground.desc %></p>					
+					<% if(campground.createdBy.username) { %>
+						<% if((currentUser != null) && (campground.createdBy.username == currentUser.username)) { %>
+							<p>Added by you</p>
+						<% } else { %>				
+							<p>Added by <%= campground.createdBy.username %></p>
+						<% } %>				
+					<% } %>				
+					<% if((currentUser != null) && (campground.createdBy.username == currentUser.username)) { %>
+						<a href="/campgrounds/<%= campground._id %>/edit"><button type="button" class="btn btn-primary">Edit</button></a>
+						<form style="display:inline" id="delete-form" action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST">
+							<button class="btn btn-danger">Delete</button> 
+						</form>
+					<% } %>				
 				</div>
 			</div>
 			<div class="well">
 				<div class="text-right">					
-					<a class="btn btn-success" href="/campgrounds/<%= campground._id %>/comments/new">Add New Comment</a>
+					<a class="btn btn-primary" href="/campgrounds/<%= campground._id %>/comments/new">Add Comment</a>
 				</div>
 				<hr>
 				<%	campground.comments.forEach(function(comment) {		%>
 					<div class="row">
 						<div class="col-md-12">
-							<strong><%= comment.author %></strong>
+							<strong><%= comment.author.username %></strong>
 							<span class="pull-right">5 days ago</span>
 							<p>
 								<%= comment.text %>
 							</p>	
 						</div>
 					</div>
-				<%	});	%>						
+				<%	});	%>	
 			</div>
 
 		</div> 

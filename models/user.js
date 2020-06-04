@@ -1,11 +1,11 @@
-
-var mongoose = require("mongoose");
-var comment = require("./comment");
+var mongoose 				= require("mongoose");
+var passportLocalMongoose 	= require("passport-local-mongoose");
 
 var userSchema = new mongoose.Schema({
-	firstName: String,
-	lastName: String,
-	comments: [Comment.Schema]
+	username: String,
+	password: String
 });
+userSchema.plugin(passportLocalMongoose);
+// userSchema.plugin(passportLocalMongoose, {usernameField: "email"});
 
 module.exports = mongoose.model("User", userSchema);
