@@ -1,14 +1,41 @@
-<%- include("partials/header") %>
+<!DOCTYPE html>
+<html>
+    <head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>YelpCamp</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/stylesheets/landing.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js" type="text/javascript" async></script>
+    </head>
+    <body>
+		
+		<div class="container" id="landing-header">
+			<div id="landing-title-box">
+				<h2 id="landing-title">Find Campgrounds for your next outdoor adventure</h2>
+			</div>
 
-<h1>
-	Landing Page!
-</h1>
+			<form action="/campgrounds/search/" method="GET" class="form-horizontal">
+				<div class="input-group input-group-lg" id="searchBar">						
+					<input type="text" name="term" class="form-control" placeholder="Campground name">
+					<span class="input-group-btn" id="inputGroup-sizing-lg">
+						<button type="submit" value="term" class="btn btn-primary" aria-describedby="inputGroup-sizing-lg">Search</button> 
+					</span>
+				</div>
+			</form>
 
-<p>
-	This will be YelpCamp landing page
-</p>
+			<div class="container" style="width: 100%; text-align: center; margin-top: 40px;">
+				<a href="/campgrounds/" class="btn btn-success">View all campgrounds</a>	
+			</div>		
+		</div>
 
-<a href="campgrounds">View all campgrounds</a>
+		<ul class="slideshow">
+		  <li></li>
+		  <li></li>
+		  <li></li>
+		  <li></li>
+		  <li></li>
+		</ul>
 
-<%- include("partials/footer") %>
+	</body>
+</html>
 

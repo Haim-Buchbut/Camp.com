@@ -1,60 +1,235 @@
 <%- include("../partials/header") %>
 
-<div class="container">
-	<div class="row">
-		<div class="col-md-3 col-sm-12">
-			<p class="lead">Yelp Camp</p>
-			<div class="list-group">
-				<a href="#" class="list-group-item list-group-item-action active">Option 1</a>
-				<a href="#" class="list-group-item list-group-item-action">Option 2</a>
-				<a href="#" class="list-group-item list-group-item-action">Option 3</a>
-			</div> 
-		</div> 
-		<div class="col-md-9 col-sm-12">
-			<div class="thumbnail">			
-				<img class="img-responsive" src="<%= campground.image %>">  
-				<div class="caption-full" id="campgroundDetails">
-					<h4 class="pull-right">$9</h4>
-					<h4><a><%= campground.name %></a></h4>
-					<p><%= campground.desc %></p>					
-					<% if(campground.createdBy.username) { %>
-						<% if((currentUser != null) && (campground.createdBy.username == currentUser.username)) { %>
-							<p>Added by you</p>
-						<% } else { %>				
-							<p>Added by <%= campground.createdBy.username %></p>
-						<% } %>				
-					<% } %>				
-					<% if((currentUser != null) && (campground.createdBy.username == currentUser.username)) { %>
-						<a href="/campgrounds/<%= campground._id %>/edit"><button type="button" class="btn btn-primary">Edit</button></a>
-						<form style="display:inline" id="delete-form" action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST">
-							<button class="btn btn-danger">Delete</button> 
-						</form>
-					<% } %>				
-				</div>
+<div style="padding-top: 10px; padding-bottom: 10px; border-bottom-size: 1px; border-bottom-style: solid; border-bottom-color: #f7f7f7;">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-9 col-sm-12 text-left">
+				<h3 class="defaultColor" style="font-weight: bold; margin-top: 0px;"><%= campground.name %></h3>
+				<p><%= campground.address %></p>						
 			</div>
-			<div class="well">
-				<div class="text-right">					
-					<a class="btn btn-primary" href="/campgrounds/<%= campground._id %>/comments/new">Add Comment</a>
-				</div>
-				<hr>
-				<%	campground.comments.forEach(function(comment) {		%>
-					<div class="row">
-						<div class="col-md-12">
-							<strong><%= comment.author.username %></strong>
-							<span class="pull-right">5 days ago</span>
-							<p>
-								<%= comment.text %>
-							</p>	
-						</div>
-					</div>
-				<%	});	%>	
+			<div class="col-md-2 col-md-offset-1 col-sm-12">
+				<p id="price">$<%= campground.price %>/night</p>						<% if((currentUser == null) || (campground.createdBy.username != currentUser.username)) { %>
+					<a href="<%= campground.website %>" target="_blank"><button type="button" class="btn btn-primary" style="width: 100%;">Book Now</button></a>
+				<% } %>
 			</div>
-
-		</div> 
-	</div>
-	
-
+		</div>
+		<% if((currentUser != null) && (campground.createdBy.username == currentUser.username)) { %>
+			<a href="/campgrounds/<%= campground._id %>/edit"><button type="button" class="btn btn-primary">Edit</button></a>
+			<form style="display:inline" id="delete-form" action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST">
+				<button class="btn btn-danger">Delete</button> 
+			</form>
+		<% } %>
+	</div>	
 </div>
+<div class="grayBackground" style="padding-bottom: 30px;">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-9 col-sm-12">
+				<img class="img-responsive" src="<%= campground.image %>" style="width: 100%; margin-bottom: 15px;">  			
+			</div>
+			<!-- style="padding-left: 0px; padding-right: 0px;" -->
+			<div class="col-md-3 col-sm-12" >			
+				<div id="map"></div>
+			</div>
+		</div>
+		<div class="row">		
+			<div class="col-md-9 col-sm-12">
+				
+				<div class="sectionArea" style="margin-top: 0px;">
+					<h4 class="defaultColor" style="font-weight: bold; margin-top: 0px;">About the Site</h4>											<p><%= campground.desc %></p>
+				</div>
+				
+				
+				<div class="sectionArea">
+					<h4 class="defaultColor" style="font-weight: bold; margin-top: 0px; display: inline;">Reviews</h4>
+					<button onclick="showAddReview(true)" class="btn btn-default pull-right defaultColor"
+						<% if(currentUser == null) { %>
+					   		disabled data-toggle="tooltip" title="Login to write a review"
+					   	<% } else if (campground.comments.findIndex(function(elm){return (elm.author.username == currentUser.username);}) != -1) { %>
+					   		disabled data-toggle="tooltip" title="You already wrote a review"
+						<% } %>
+					   >
+						Write a review
+					</button>
+					<% if(campground.comments.length > 0) { %>
+						<div style="margin-top: 10px; display: flex; align-items: center; width: 100%;">						
+							<span style="font-size: 24px; font-weight: bold; margin-right: 15px;" class="lightGrayColor"><%= avgScore %></span>
+							<% var i = 0; %>
+							<% var fraction = avgScore - avgScore.toFixed(); %>
+							<% for(; i < (avgScore - fraction); i++) { %>
+								<img src="/star-full-icon-24.png"> 
+							<% } %>
+							<% if((i < 5) && (fraction >= 0.3) & (fraction <= 0.7)) %>
+							<% { %>
+								<img src="/star-half-full-icon-24.png"> 
+							<% 	i = i + 1; %>
+							<% } %>
+							<% for(; i < 5; i++) { %>
+								<img src="/star-empty-icon-24.png"> 
+							<% } %>
+							<span style="margin-left: 10px;" styleclass="lightGrayColor">(<%= campground.comments.length %> reviews)</span>
+						</div>
+					<% } else { %>
+						<p style="margin-top: 10px;">Did you visit the <%= campground.name %>? Be the 1st to write a review.</p>
+					<% } %>
+
+					
+					
+					<form id="newReviewForm" class="newReviewForm" 
+						  style="display: none; padding: 15px 0px; border-top: 1px solid #dcdcdc; margin-top: 30px;" 
+						  method="POST" 
+						  onSubmit="return validateReview()" 
+						  action="/campgrounds/<%= campground._id %>/comments">
+						<% if(currentUser != null) { %>
+							<div class="form-group">							
+								<p style="font-size: 13px; line-height: 80%;"><strong><%= currentUser.username %></strong>
+							</div>
+						<%	}	%>	
+						
+						<input class="form-control" id="score" name="score" style="display: none;" value="0">
+						<div id="newReviewScoreCont" style="margin-top: 15px;">		
+							<!-- source for star icons: http://www.iconarchive.com/show/flatastic-2-icons-by-custom-icon-design/star-half-full-icon.html -->
+							<img src="/star-empty-icon-24.png" id="starOne" onclick="updateScore(1)" style="padding-right: 10px;">
+							<img src="/star-empty-icon-24.png" id="starTwo" onclick="updateScore(2)" style="padding-right: 10px;">
+							<img src="/star-empty-icon-24.png" id="starThree" onclick="updateScore(3)" style="padding-right: 10px;">
+							<img src="/star-empty-icon-24.png" id="starFour" onclick="updateScore(4)" style="padding-right: 10px;">
+							<img src="/star-empty-icon-24.png" id="starFive" onclick="updateScore(5)" style="padding-right: 10px;">
+						</div>
+						<p id="ratingErr" style="display:none; margin-top: 7px; color:red;"></p>
+						
+						<div class="form-group" style="margin-top: 15px;">							
+							<textarea class="form-control" id="review" name="review" placeholder="Share your experience at <%= campground.name %>" rows="4" style="width: 100%;" maxlength="1000"></textarea>
+							<p id="reviewErr" style="display:none; margin-top: 7px; color:red"></p>
+						</div>
+						<div style="display: inline; margin-top: 15px;">							
+							<input class="btn btn-primary" type="submit" value="Submit">
+							<a class="btn btn-default" onclick="showAddReview(false)">Cancel</a>
+						</div>
+					</form>		
+					
+					
+					<%	campground.comments.forEach(function(comment) {		%>
+						<div style="padding-top: 15px; border-top: 1px solid #dcdcdc; margin-top: 20px;">
+							<p style="font-size: 13px; line-height: 80%;"><strong><%= comment.author.username %></strong>
+							
+							<% if(comment.score != null) { %>	
+								<div style="padding-bottom: 15px;">		
+							<!-- source for star icons: http://www.iconarchive.com/show/flatastic-2-icons-by-custom-icon-design/star-half-full-icon.html -->
+									<% var i = 0; %>
+									<% for(; i < comment.score; i++) { %>
+										<img src="/star-full-icon-16.png"> 
+									<% } %>
+									<% for(; i < 5; i++) { %>
+										<img src="/star-empty-icon-16.png"> 
+									<% } %>
+								</div>
+							<%	}	%>	
+							
+							<p><%= comment.text %></p>
+							
+							<p style="font-size: 13px; line-height: 80%;"><%= new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(comment._id.getTimestamp())) %></p>
+						</div>
+					<%	});	%>	
+				</div>
+			</div>
+			<div class="col-md-3 col-sm-12"></div>
+		</div>
+	</div>
+</div>
+
+
+
+<script>
+	var express = require("express");
+	var app = express();
+	
+	function updateScore(score) 
+	{
+		document.getElementById('score').value = score;
+
+		document.getElementById('starOne').src = '/star-full-icon-24.png';
+		document.getElementById('starTwo').src = (score > 1)? '/star-full-icon-24.png' : '/star-empty-icon-24.png';
+		document.getElementById('starThree').src = (score > 2)? '/star-full-icon-24.png' : '/star-empty-icon-24.png';
+		document.getElementById('starFour').src = (score > 3)? '/star-full-icon-24.png' : '/star-empty-icon-24.png';
+		document.getElementById('starFive').src = (score > 4)? '/star-full-icon-24.png' : '/star-empty-icon-24.png';
+	}
+	function showAddReview(show) {
+		if(show) {
+			document.getElementById('score').value = 0;
+			document.getElementById('starOne').src = '/star-empty-icon-24.png';
+			document.getElementById('starTwo').src = '/star-empty-icon-24.png';
+			document.getElementById('starThree').src = '/star-empty-icon-24.png';
+			document.getElementById('starFour').src = '/star-empty-icon-24.png';
+			document.getElementById('starFive').src = '/star-empty-icon-24.png';
+			
+			document.getElementById('review').value = "";
+			document.getElementById('reviewErr').style.display = 'none';
+		}
+
+		document.getElementById('newReviewForm').style.display = show? 'block' : 'none';
+	}
+	function validateReview() {
+		var errorsFound = false;
+		
+		var ratingErrElm = document.getElementById('ratingErr');
+		if(document.getElementById('score').value == 0) {
+			ratingErrElm.innerHTML = "Please rate this facility";
+			ratingErrElm.style.display = 'block';
+			errorsFound = true;			
+		} else 
+			ratingErrElm.style.display = 'none';		
+		
+		var reviewLength = document.getElementById('review').value.length; 
+		var reviewErrElm = document.getElementById('reviewErr');
+		if(reviewLength < 50) {
+			reviewErrElm.innerHTML = "Minimum 50 characters" + ((reviewLength > 0)? "(currently " + reviewLength + ")" : "");
+			reviewErrElm.style.display = 'block';
+			errorsFound = true;			
+		} else 
+			reviewErrElm.style.display = 'none';		
+		
+		if(errorsFound)
+			return false;
+																
+		document.getElementById('review').value.trim();
+		document.getElementById('newReviewForm').submit();
+	}
+// <!-- Google Maps API key: AIzaSyAuIfJp9qgrhve0xTQ283gqGB00_Flg8iU -->
+// <!-- Google GeoCoding API key: AIzaSyDP7flZjCFiarELiMe7sGK0KsPY_5C8Wi8 -->
+  	function initMap() {
+		var lat = <%= campground.lat %>;
+		var lng = <%= campground.lng %>;
+		var center = {lat: lat, lng: lng };
+		var map = new google.maps.Map(document.getElementById('map'), {
+			zoom: 10,
+			center: center,
+			zoomControl: false,
+			scaleControl: true,
+			streetViewControl: false,
+			mapTypeControl: false,
+			scrollwheel: false
+		});
+		// For now, not showing an info popup in the show page; will be relevant in the search page when showing multiple campsites 
+		// var contentString = `
+		//   <strong>campground.name<br />
+		//   <p>campground.address</p>
+		//   <p>campground.price$</p>
+		// `
+		// console.log('[Show page] contentString: ' + contentString)
+		// var infowindow = new google.maps.InfoWindow({
+		//   content: contentString
+		// });
+		var marker = new google.maps.Marker({
+			position: center,
+			map: map
+		});
+		// marker.addListener('click', function() {
+		//   infowindow.open(map, marker);
+		// });
+	}
+</script>
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAuIfJp9qgrhve0xTQ283gqGB00_Flg8iU&callback=initMap"></script>
 
 
 <%- include("../partials/footer") %>

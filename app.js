@@ -30,7 +30,7 @@ mongoose.connect(url, {
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.set("view engine","ejs");
-app.use(express.static(__dirname + "public"));
+app.use(express.static(__dirname + '/public'));
 app.use(methodOverride('_method'))
 // seedDB(); // Seeding the DB with initial data for testing
 app.use(flash());
@@ -68,4 +68,5 @@ var port = process.env.PORT || 3000;
 app.listen(port, function() {
 	console.log("YelpCamp server is up!");
 });
+
 

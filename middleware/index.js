@@ -11,7 +11,7 @@ module.exports = {
 	hasPermissionForCampground: function(req, res, next) {
 		if( req.isAuthenticated() ) {
 			Campground.findById({_id : req.params.id}, function(err, campground) {
-				if(err) {
+				if(err || !campground) {
 					console.log(err);
 			        req.flash("errorMsg", "We could not find this campground");
 					res.redirect("/campgrounds");

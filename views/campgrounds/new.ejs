@@ -1,31 +1,196 @@
 <%- include("../partials/header") %>
 
+<div class="grayBackground" 
+	 style="background-color: #f7f7f7; padding-top: 30px; padding-bottom: 30px;">
+	<div class="container"
+		 style="border: 1px solid black; background-color: white; padding: 0px; width:50%; min-width: 300px;">
+		
+		<div style="border-bottom: 1px solid #70757A; width:100%; padding: 0px 15px; text-align: left;">
+			<h3>Add campground</h1>		
+		</div>
 
-<div class="container">
-	<div class="row">
-		<h1 style="text-align: center;">Add a New Campground</h1>
-	
-		<div style="width:30%; margin: 25px auto;">
-			<form action="/campgrounds" method="POST">
+		<div style="width:100%; padding: 20px 15px;">
+			<form id="newCampgroundForm" 
+				  action="/campgrounds" 
+				  onSubmit="return validateAddNewForm()" 
+				  method="POST">
+
+
+
 				<div class="form-group">
-					<input type="text" class="form-control" name="name" placeholder="Name">				
+					<label class="control-label" for="name">Campground Name</label>
+					<input id="name" type="text" class="form-control form-control-lg" name="name" placeholder="Name" autocomplete="off">
+					<span id="nameErrMsg" class="errorMessage"></span>
 				</div>
+
 				<div class="form-group">
-					<input type="text" class="form-control" name="image" placeholder="Image">
+					<label class="control-label" for="address">Address</label>
+					<input id="address" type="text" class="form-control form-control-lg" name="address" placeholder="e.g. Chester Lane, Little Budworth, Tarporley, Cheshire, CW7 2QJ" autocomplete="off">  
+					<!-- onfocusout="validateAddress()" -->
+					<span id="addressErrMsg" class="errorMessage"></span>
 				</div>
+
 				<div class="form-group">
-					<input type="text" class="form-control form-control-lg" name="desc" placeholder="Description">
+					<label class="control-label" for="price">Price</label>
+					<input id="pricePerNight" type="number" class="form-control form-control-lg" name="price" placeholder="price per night" autocomplete="off">  
+					<span id="priceErrMsg" class="errorMessage"></span>
 				</div>
+
+				<div class="form-group">
+					<label class="control-label" for="image">Image URL</label>
+					<input id="image" type="text" class="form-control form-control-lg" name="image" placeholder="Image URL of your campground" autocomplete="off">  
+					<span id="imageErrMsg" class="errorMessage"></span>
+				</div>	
+
+				<div class="form-group">
+					<label class="control-label" for="website">Website URL</label>
+					<input id="website" type="text" class="form-control form-control-lg" name="website" placeholder="Website" autocomplete="off">
+					<span id="websiteErrMsg" class="errorMessage"></span>
+				</div>
+
+				<div class="form-group">
+					<label class="control-label" for="desc">Description</label>
+					<textarea id="desc" type="text" class="form-control form-control-lg" name="desc" placeholder="Share details about your campground" rows="4" maxlength="1000" autocomplete="off"></textarea>
+					<span id="descErrMsg" class="errorMessage"></span>
+				</div>				
+
+
 				<div class="form-group">
 					<button class="btn btn-lg btn-primary btn-block">Submit</button>
 				</div>
 			</form>
-	
-			<a href="/campgrounds">Go back</a>
+
+			<!-- <a href="/campgrounds">Go back</a> -->
 		</div>
 	</div>
-
 </div>
+
+
+<script>
+	
+	function validateUrl(value)
+	{
+		var expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+		var regexp = new RegExp(expression);
+		return regexp.test(value);
+	} 
+	
+	// function validateAddress()
+	// {
+	// 	var address = document.getElementById('address').value;
+	// 	if(address != null)
+	// 	{
+	// 		googleGeocoder.geocode(address, function (err, results) 
+	// 		{
+	// 			if(err || !results.length) 
+	// 			{
+	// 				console.log("[Campground Add]: Could not geocode the address.");
+	// 				document.getElementById('addressErrMsg').innerHTML = "Could not validate the address you provided.";
+	// 				document.getElementById('addressErrMsg').style.display = 'block';
+	// 				return false;
+	// 			}			
+	// 		});
+	// 	}
+	// 	return true;
+	// }
+	
+	function validateAddNewForm() {
+		console.log("validateAddNewForm()");
+		var isValid = true;
+		
+		// Name 
+		var name = document.getElementById('name').value;
+		console.log(name);
+		if(!name) 
+		{
+			console.log("Name is missing");
+			document.getElementById('nameErrMsg').innerHTML = "Please enter a campground name.";
+			document.getElementById('nameErrMsg').style.display = 'block';
+			isValid = false;			
+		} else
+			document.getElementById('nameErrMsg').style.display = 'none';
+
+		
+		// Address
+		var address = document.getElementById('address').value;
+		console.log(address);
+		if(!address) 
+		{
+			console.log("address is missing");
+			document.getElementById('addressErrMsg').innerHTML = "Address is required.";
+			document.getElementById('addressErrMsg').style.display = 'block';
+			isValid = false;			
+		} else 
+		// if(!validateAddress()) {
+		// 	isValid = false;
+		// } else
+			document.getElementById('addressErrMsg').style.display = 'none';
+
+		
+		// Price 
+		var price = document.getElementById('pricePerNight').value;
+		console.log(price);
+		if(!price) 
+		{
+			console.log("price is missing");
+			document.getElementById('priceErrMsg').innerHTML = "Price is required.";
+			document.getElementById('priceErrMsg').style.display = 'block';
+			isValid = false;			
+		} else
+			document.getElementById('priceErrMsg').style.display = 'none';		
+		
+		
+		// Image URL
+		var imageURL = document.getElementById('image').value;
+		console.log(imageURL);
+		if(!imageURL) {
+			console.log("Image URL is missing");
+			document.getElementById('imageErrMsg').innerHTML = "Image URL is required.";
+			document.getElementById('imageErrMsg').style.display = 'block';
+			isValid = false;			
+		} else if(!validateUrl(imageURL)) 
+		{
+			document.getElementById('imageErrMsg').innerHTML = "Invalid URL format.";
+			document.getElementById('imageErrMsg').style.display = 'block';
+			isValid = false;
+		} else 
+			document.getElementById('imageErrMsg').style.display = 'none';	
+		
+		// Website URL
+		var websiteURL = document.getElementById('website').value;
+		console.log(websiteURL);
+		if(!websiteURL) {
+			console.log("Website URL is missing");
+			document.getElementById('websiteErrMsg').innerHTML = "Website URL is required.";
+			document.getElementById('websiteErrMsg').style.display = 'block';
+			isValid = false;			
+		} else if(!validateUrl(websiteURL)) 
+		{
+			document.getElementById('websiteErrMsg').innerHTML = "Invalid URL format.";
+			document.getElementById('websiteErrMsg').style.display = 'block';
+			isValid = false;
+		} else 
+			document.getElementById('websiteErrMsg').style.display = 'none';
+	
+		
+		// Description 
+		var desc = document.getElementById('desc').value;
+		console.log(desc);
+		if(!desc) 
+		{
+			console.log("description is missing");
+			document.getElementById('descErrMsg').innerHTML = "Description is required.";
+			document.getElementById('descErrMsg').style.display = 'block';
+			isValid = false;			
+		} else
+			document.getElementById('descErrMsg').style.display = 'none';	
+		
+		if(!isValid)
+			return false;
+		
+		document.getElementById('newCampgroundForm').submit();
+	}
+</script>
 
 
 <%- include("../partials/footer") %>

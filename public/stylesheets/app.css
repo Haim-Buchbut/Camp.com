@@ -1,4 +1,60 @@
 
+html {
+	height: 100%;
+}
+body {
+	padding-top: 50px;
+	height: 100%;
+}
+
+.defaultColor {
+	color: #465280;
+}
+.lightGrayColor {
+	color: #70757A;
+}
+.grayBackground {
+  background-color: #f7f5f5; /* #ebecf0; */	
+}
+
+.errorMessage {
+	color: red;
+	font-size: 12px;
+	padding-top: 5px;
+}
+
+
+.control-label {
+	font-weight: normal;
+}
+
+.navbar-default {
+  background-color: #ffffff;
+}
+.navbar-header {
+  background-color: #ffffff;
+}
+.navbar-default .container {
+  background-color: #ffffff;
+}
+.navbar-default .navbar-nav > li > a {
+  color: #465280;
+}
+/* #searchButton {
+	background-color: #465280; 
+} */
+
+.footer {
+	background-color: white;
+	height: 50px;
+	font-size: 13px;
+	border-top: 1px solid #dcdcdc;
+}
+.footer a {
+	margin-left: 20px;
+	color: #465280;
+	text-decoration: none;
+}
 
 .thumbnail img {
 	width: 100%;
@@ -11,3 +67,37 @@
 .thumbnail .caption-full {
 	padding: 9px;
 }
+
+.row {
+	/* padding-top: 10px; */
+	/* padding-left: 10px;
+	padding-right: 10px; */
+	margin-top: 10px;
+	/* margin-left: 5px;
+	margin-right: 5px; */
+	/* background-color: white; */
+}
+
+#campgroundSearchResult .thumbnail {
+	margin-bottom: 0px;
+}
+
+
+
+.sectionArea {
+	border-radius: 10px;
+	background-color: white;
+	margin-top: 20px;
+	padding: 15px;
+}
+#price {
+	font-size: 18px;
+	font-weight: bold; 
+	color: #465280;	
+}
+/* Google Maps */
+#map {
+    height: 400px;
+    /* width: 100%; */
+}
+

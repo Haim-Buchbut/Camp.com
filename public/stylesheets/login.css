@@ -1,0 +1,21 @@
+
+body {
+	padding-top: 50px;
+}
+
+#loginCont {
+	padding: 30px 20px;
+	border: 1px solid #465280; 
+	background-color: white; 
+	width: 40%; 
+	min-width: 300px;
+}
+
+h4 {
+	margin-bottom: 20px;
+	font-weight: bold;
+}
+
+p {
+	text-align: center;	
+}

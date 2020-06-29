@@ -31,12 +31,18 @@ router.post("/register", function(req, res){
 router.get("/login", function(req, res){
    res.render("login"); 
 });
-router.post("/login", passport.authenticate("local", 
-    {
-        successRedirect: "/campgrounds",
-        failureRedirect: "/login"
-    }), function(req, res){
-});
+router.post(	"/login", 
+				passport.authenticate(
+					"local", 
+					{
+						successRedirect: "/campgrounds",
+						failureRedirect: "/login"
+					}), 
+				function(req, res){
+					console.log(res);
+					req.flash("successMsg", "Welcome back!");
+				}
+);
 router.get("/logout", function(req, res){
    req.logout();
    req.flash("successMsg", "Goodbye! Come back soon :-)");

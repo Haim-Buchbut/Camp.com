@@ -1,13 +1,52 @@
-<%- include("partials/header") %>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Camp.com - Sign in</title>
+		<link rel="icon" href="/favicon.png" style="height: 32px; width: 32px;">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">	
+		<link rel="stylesheet" href="/stylesheets/login.css">	
+	</head>
+	<body>
+		<div class="container">
+			<% if(successMsg && (successMsg.length > 0)){ %>
+				<div class="alert alert-success">
+					<%= successMsg %>
+				</div>
+			<% } %>	
+			<% if(errorMsg && (errorMsg.length > 0)){ %>
+				<div class="alert alert-danger">
+					<%= errorMsg %>
+				</div>
+			<% } %>	
+		</div>
+		<div class="container"
+			 id="loginCont">
+			<div style="width: 100%; text-align: center;">
+				<a href="/"><img href="/" src="/favicon.png" style="height: 128px; width: 128px; margin-bottom: 20px;"></a>	
+			</div>
+			
+			<h4>
+				Welcome back - sign in!
+			</h4>	
+			<form action="/login" method="POST"
+				  style="marging-top: 20px;">				
+				<div class="form-group">
+					<label class="control-label" style="font-weight: normal;" for="username">User name</label>
+					<input id="username" type="text" class="form-control form-control-lg" name="username">
+					<span id="usernameErrMsg" class="errorMessage"></span>
+				</div>
+				<div class="form-group">
+					<label class="control-label" style="font-weight: normal;" for="password">Password</label>
+					<input id="password" type="password" class="form-control form-control-lg" name="password">
+					<span id="passwordErrMsg" class="errorMessage"></span>
+				</div>
+				<div class="form-group">
+					<button class="btn btn-lg btn-primary btn-block">Sign in</button>				
+				</div>
+			</form>	
+			<p>Don't have an account? <a href="/register">Sign Up</a></p>
+		</div>
+	</body>
+</html>
 
-<h1>
-	Login Page
-</h1>
-
-<form action="/login" method="POST">
-	<input type="email" name="username" placeholder="Email">
-	<input type="password" name="password" placeholder="Password">
-	<button>Login</button>
-</form>
-
-<%- include("partials/footer") %>

@@ -1,0 +1,75 @@
+<%- include("../partials/header") %>
+
+<div style="background-color: #f7f7f7; padding-top: 10px; padding-bottom: 10px;">
+	
+	<div class="container">
+
+		<% if(noResults) { %>
+		<div class="alert alert-warning" role="alert">We could not find campgrounds matching your search. Please try to modify your search or checkout other campgrounds available.</div>
+		<% } else { %>
+			<% if((searchTerm != null) && (searchTerm.length > 0)) { %>
+				<h4 style="font-weight: bold;"><%= campgrounds.length %> results for "<%= searchTerm %>"</h4>
+		<% }} %>
+		
+		<% campgrounds.forEach(function(campground) { 		%>
+			 <!-- style="display: flex;" -->
+			<div id="campgroundSearchResult"
+				 class="row text-center"
+				 style="border: 1px solid rgb(221, 221, 221); background-color: white;">
+				<div class="thumbnail col-md-3 col-xs-12 col-sm-12">				
+					<img src="<%= campground.image %>" style="height: 20rem;">	
+				</div>
+				<div class="col-md-6 col-xs-12 col-sm-12"> 
+					 <!-- style="height: 100%; position: relative;"> -->
+					<a href="/campgrounds/<%= campground._id %>"><h4 class="text-left"><%= campground.name %></h4></a>
+
+					<% if((campground.comments.length > 0) && (campground.avgScore != null)) { %>
+						<div style="margin-top: 10px; display: flex; align-items: center; width: 100%;">						
+							<span style="font-size: 16px; font-weight: bold; margin-right: 15px;" class="lightGrayColor"><%= campground.avgScore %></span>
+							<% var i = 0; %>
+							<% var fraction = campground.avgScore - campground.avgScore.toFixed(); %>
+							<% for(; i < (campground.avgScore - fraction); i++) { %>
+								<img src="/star-full-icon-16.png"> 
+							<% } %>
+							<% if((i < 5) && (fraction >= 0.3) & (fraction <= 0.7)) %>
+							<% { %>
+								<img src="/star-half-full-icon-16.png"> 
+							<% 	i = i + 1; %>
+							<% } %>
+							<% for(; i < 5; i++) { %>
+								<img src="/star-empty-icon-16.png"> 
+							<% } %>
+							<span style="margin-left: 10px;" styleclass="lightGrayColor">(<%= campground.comments.length %> reviews)</span>
+						</div>
+					<% } %>
+				
+					<p 	class="text-left" 
+						style="	margin-top: 10px; 
+							  	overflow: hidden;
+							  	text-overflow: ellipsis;
+   								display: -webkit-box;
+   								line-height: 20px;     /* fallback */
+   								max-height: 100px;      /* fallback */
+   								-webkit-line-clamp: 5; /* number of lines to show */
+   								-webkit-box-orient: vertical;">
+						<%= campground.desc %>
+					</p>
+				</div>
+				<div class="col-md-3 hidden-xs hidden-sm" 
+					 style="text-align: right; border-left: 1px solid #ebeced; padding-top: 10px;">
+					<% if(campground.price != null) { %>
+						<p id="price">$<%= campground.price %>/night</p>	
+					<% } %>
+					<a class="btn btn-primary" href="/campgrounds/<%= campground._id %>">Learn more</a>
+				</div>
+			</div>
+		<% }); %> 			
+
+		<!-- see campgrounds.js for how it was implemented as thumbnails -->
+	</div>
+</div>
+
+ <!-- class="float-right" -->
+ <!-- style="display: block" -->
+
+<%- include("../partials/footer") %>
