@@ -46,7 +46,8 @@ router.post("/campgrounds", middleware.isLoggedIn, function(req,res){
 			console.log("[Campground Add]: could not geocode the address.");
 		  	req.flash("errorMsg", "Could not validate the address you provided.");
 		  	res.redirect('back');
-		} else {			
+		} else {	
+			// console.log(req.body);
 			var address = req.body.address;
 			var lat = results[0].latitude;
 			var lng = results[0].longitude;
@@ -56,7 +57,17 @@ router.post("/campgrounds", middleware.isLoggedIn, function(req,res){
 			var website = req.body.website;
 			var desc = req.body.desc;
 			var createdBy = { id: req.user._id, username: req.user.username };
-			var newCampground = { name: name, address: address, lat: lat, lng: lng, price:price, image: image, website:website, desc: desc, createdBy: createdBy };
+			var amenities = { 	toilets : req.body.toilets == 'on'? true : false,
+								showers : req.body.showers == 'on'? true : false,
+								drinkingWater : req.body.drinkingWater == 'on'? true : false,
+								fireAllowed : req.body.fireAllowed == 'on'? true : false,
+								petsAllowed : req.body.petsAllowed == 'on'? true : false,
+								mapSigns : req.body.mapSigns == 'on'? true : false,
+								accessible : req.body.accessible == 'on'? true : false,
+								parking : req.body.parking == 'on'? true : false,
+								wifi : req.body.wifi == 'on'? true : false,
+							}
+			var newCampground = { name: name, address: address, lat: lat, lng: lng, price:price, image: image, website:website, desc: desc, createdBy: createdBy, amenities: amenities  };
 			Campground.create( newCampground, function(err,newCampground) {
 					if(err || !newCampground) {
 						console.log("Failed to save a new campground");
@@ -96,7 +107,17 @@ router.put("/campgrounds/:id/", middleware.hasPermissionForCampground, function(
 			var image = req.body.image;
 			var website = req.body.website;
 			var desc = req.body.desc;
-			var updatedCampground = {name:name, address: address, lat: lat, lng: lng, price:price, image:image, website:website, desc:desc};
+			var amenities = { 	toilets : req.body.toilets == 'on'? true : false,
+								showers : req.body.showers == 'on'? true : false,
+								drinkingWater : req.body.drinkingWater == 'on'? true : false,
+								fireAllowed : req.body.fireAllowed == 'on'? true : false,
+								petsAllowed : req.body.petsAllowed == 'on'? true : false,
+								mapSigns : req.body.mapSigns == 'on'? true : false,
+								accessible : req.body.accessible == 'on'? true : false,
+								parking : req.body.parking == 'on'? true : false,
+								wifi : req.body.wifi == 'on'? true : false,
+							}
+			var updatedCampground = {name:name, address: address, lat: lat, lng: lng, price:price, image:image, website:website, desc:desc, amenities: amenities};
 			Campground.findByIdAndUpdate(req.params.id, updatedCampground, function(err, campground){
 				req.flash("successMsg","The campground was successfully updated");
 				res.redirect("/campgrounds/" + req.params.id);	
@@ -197,10 +218,13 @@ router.get("/campgrounds/:id", function(req,res){
 			}
 			if(total > 0)
 				avgScore = Number((total / reviewersCount).toFixed(1));
+			
+			// console.log(reqCampground);
 			res.render("campgrounds/show.ejs", {campground: reqCampground, avgScore : avgScore});	
 		}
 	});
 });
+
 
 function escapeRegex(text) {
     return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");

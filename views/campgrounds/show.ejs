@@ -39,6 +39,61 @@
 					<h4 class="defaultColor" style="font-weight: bold; margin-top: 0px;">About the Site</h4>											<p><%= campground.desc %></p>
 				</div>
 				
+				<div class="sectionArea">
+					<h4 class="defaultColor" style="font-weight: bold; margin-top: 0px;">Amenities</h4>
+					<div class="container">						
+						<div class="row">					
+							<div class="col-md-3 col-sm-12" style="padding-left: 0px;">						
+								<ul class="amenityList">
+										<li class="amenityListItem">
+											<div class="amenityListItemIcon"><i class="fas fa-toilet fa-lg" style="color: <%= campground.amenities.toilets? "green" : "#D0D0D0" %>"></i></div><span>Toilets</span>
+										</li>
+										<li class="amenityListItem">
+											<div class="amenityListItemIcon"><i class="fas fa-shower fa-lg" style="color: <%= campground.amenities.showers? "green" : "#D0D0D0" %>"></i></div><span>Showers</span>
+										</li>
+										<li class="amenityListItem">
+											<div class="amenityListItemIcon"><i class="fas fa-faucet fa-lg" style="color: <%= campground.amenities.drinkingWater? "green" : "#D0D0D0" %>"></i></div><span>Drinking Water</span>
+									</li>
+								</ul>
+							</div>
+							<div class="col-md-3 col-sm-12" style="padding-left: 0px;">						
+								<ul class="amenityList">
+										<li class="amenityListItem">
+											<div class="amenityListItemIcon"><i class="fab fa-gripfire fa-lg" style="color: <%= campground.amenities.fireAllowed? "green" : "#D0D0D0" %>"></i></div><span>Fire allowed</span>
+										</li>
+										<li class="amenityListItem">
+											<div class="amenityListItemIcon"><i class="fas fa-dog fa-lg" style="color: <%= campground.amenities.petsAllowed? "green" : "#D0D0D0" %>"></i></div><span>Pets allowed</span>
+										</li>
+										<li class="amenityListItem">
+											<div class="amenityListItemIcon"><i class="fas fa-map-signs fa-lg" style="color: <%= campground.amenities.mapSigns? "green" : "#D0D0D0" %>"></i></div><span>Signs</span>
+									</li>
+								</ul>
+							</div>
+							<div class="col-md-3 col-sm-12" style="padding-left: 0px;">						
+								<ul class="amenityList">
+										<li class="amenityListItem">
+											<div class="amenityListItemIcon"><i class="fab fa-accessible-icon fa-lg" style="color: <%= campground.amenities.accessible? "green" : "#D0D0D0" %>"></i></div><span>Accessible</span>
+										</li>
+										<li class="amenityListItem">
+											<div class="amenityListItemIcon"><i class="fas fa-parking fa-lg" style="color: <%= campground.amenities.parking? "green" : "#D0D0D0" %>"></i></div><span>Parking</span>
+										</li>
+										<li class="amenityListItem">
+											<div class="amenityListItemIcon"><i class="fas fa-wifi fa-lg" style="color: <%= campground.amenities.wifi? "green" : "#D0D0D0" %>"></i></div><span>WiFi</span>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+
+					<!-- <div><span class="glyphicon glyphicon-unchecked" aria-hidden="true" style="color: red;"></span> Bike Hire</div>
+							<div><span class="glyphicon glyphicon-unchecked" aria-hidden="true" style="color: red;"></span> Internet Access</div>
+							<div><span class="glyphicon glyphicon-unchecked" aria-hidden="true" style="color: red;"></span> Laundry</div>
+							<div><span class="glyphicon glyphicon-unchecked" aria-hidden="true" style="color: red;"></span> Kids playground</div>
+							<div><span class="glyphicon glyphicon-unchecked" aria-hidden="true" style="color: red;"></span> Horse Riding</div>
+							<div><span class="glyphicon glyphicon-check" aria-hidden="true" style="color: green;"></span> Fires allowed</div>
+							<div><span class="glyphicon glyphicon-unchecked" aria-hidden="true" style="color: red;"></span> Allow pets</div>
+							<div><span class="glyphicon glyphicon-unchecked" aria-hidden="true" style="color: red;"></span> Disabled facilities</div> -->
+				</div>
 				
 				<div class="sectionArea">
 					<h4 class="defaultColor" style="font-weight: bold; margin-top: 0px; display: inline;">Reviews</h4>
@@ -99,7 +154,6 @@
 						
 						<div class="form-group" style="margin-top: 15px;">							
 							<textarea class="form-control" id="review" name="review" placeholder="Share your experience at <%= campground.name %>" rows="4" style="width: 100%;" maxlength="1000"></textarea>
-							<p id="reviewErr" style="display:none; margin-top: 7px; color:red"></p>
 						</div>
 						<div style="display: inline; margin-top: 15px;">							
 							<input class="btn btn-primary" type="submit" value="Submit">
@@ -111,7 +165,6 @@
 					<%	campground.comments.forEach(function(comment) {		%>
 						<div style="padding-top: 15px; border-top: 1px solid #dcdcdc; margin-top: 20px;">
 							<p style="font-size: 13px; line-height: 80%;"><strong><%= comment.author.username %></strong>
-							
 							<% if(comment.score != null) { %>	
 								<div style="padding-bottom: 15px;">		
 							<!-- source for star icons: http://www.iconarchive.com/show/flatastic-2-icons-by-custom-icon-design/star-half-full-icon.html -->
@@ -124,9 +177,9 @@
 									<% } %>
 								</div>
 							<%	}	%>	
-							
-							<p><%= comment.text %></p>
-							
+							<% if(comment.text != null) { %>
+								<p><%= comment.text %></p>
+							<%	}	%>
 							<p style="font-size: 13px; line-height: 80%;"><%= new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(comment._id.getTimestamp())) %></p>
 						</div>
 					<%	});	%>	
@@ -140,8 +193,6 @@
 
 
 <script>
-	var express = require("express");
-	var app = express();
 	
 	function updateScore(score) 
 	{
@@ -163,7 +214,6 @@
 			document.getElementById('starFive').src = '/star-empty-icon-24.png';
 			
 			document.getElementById('review').value = "";
-			document.getElementById('reviewErr').style.display = 'none';
 		}
 
 		document.getElementById('newReviewForm').style.display = show? 'block' : 'none';
@@ -178,16 +228,7 @@
 			errorsFound = true;			
 		} else 
 			ratingErrElm.style.display = 'none';		
-		
-		var reviewLength = document.getElementById('review').value.length; 
-		var reviewErrElm = document.getElementById('reviewErr');
-		if(reviewLength < 50) {
-			reviewErrElm.innerHTML = "Minimum 50 characters" + ((reviewLength > 0)? "(currently " + reviewLength + ")" : "");
-			reviewErrElm.style.display = 'block';
-			errorsFound = true;			
-		} else 
-			reviewErrElm.style.display = 'none';		
-		
+				
 		if(errorsFound)
 			return false;
 																

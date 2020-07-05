@@ -82,7 +82,24 @@ body {
 	margin-bottom: 0px;
 }
 
+.amenityList {
+    list-style-type: none;	
+    padding: 0;
+}
+.amenityListItem {
+	list-style-type: none;
+	font-size: 15px;
+  	margin: 15px 0;
+  	padding: 0;
+	/* line-height: 200%; */
+}
+.amenityListItemIcon {
+	display: inline-block;
+	width: 30px;
+}
 
+.checkbox input {
+}
 
 .sectionArea {
 	border-radius: 10px;

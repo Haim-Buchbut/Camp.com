@@ -10,6 +10,17 @@ var campgroundSchema = new mongoose.Schema({
 	lat: Number,
 	lng: Number,
 	price: String,
+	amenities: {
+		toilets: Boolean,
+		showers: Boolean,
+		drinkingWater: Boolean,
+		fireAllowed: Boolean,
+		petsAllowed: Boolean,
+		mapSigns: Boolean,
+		accessible: Boolean,
+		parking: Boolean,
+		wifi: Boolean,
+	},
 	createdBy: {
 		id: { 
 			type: mongoose.Schema.Types.ObjectId,
