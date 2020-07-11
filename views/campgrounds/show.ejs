@@ -108,20 +108,26 @@
 					</button>
 					<% if(campground.comments.length > 0) { %>
 						<div style="margin-top: 10px; display: flex; align-items: center; width: 100%;">						
-							<span style="font-size: 24px; font-weight: bold; margin-right: 15px;" class="lightGrayColor"><%= avgScore %></span>
-							<% var i = 0; %>
-							<% var fraction = avgScore - avgScore.toFixed(); %>
-							<% for(; i < (avgScore - fraction); i++) { %>
-								<img src="/star-full-icon-24.png"> 
+							<span style="font-size: 24px; font-weight: bold; margin-right: 15px;" class="lightGrayColor"><%= avgScore %></span>							
+							<% var i = 1; %>
+							<% for(; i <= avgScore; i++) { %>
+								<img src="/star-full-icon-16.png"> 
 							<% } %>
-							<% if((i < 5) && (fraction >= 0.3) & (fraction <= 0.7)) %>
-							<% { %>
-								<img src="/star-half-full-icon-24.png"> 
-							<% 	i = i + 1; %>
+							<% if(i <= 5) { %>
+								<% var fraction = avgScore - avgScore.toFixed(); %>
+								<% if(fraction < 0.3) { %>
+									<img src="/star-empty-icon-16.png">
+								<% } else if (fraction <= 0.7) { %> 
+									<img src="/star-half-full-icon-16.png">
+								<% } else { %>
+									<img src="/star-full-icon-16.png">
+								<% } %>
+								<% i = i + 1; %>
 							<% } %>
-							<% for(; i < 5; i++) { %>
-								<img src="/star-empty-icon-24.png"> 
+							<% for(; i <= 5; i++) { %>
+								<img src="/star-empty-icon-16.png"> 
 							<% } %>
+							
 							<span style="margin-left: 10px;" styleclass="lightGrayColor">(<%= campground.comments.length %> reviews)</span>
 						</div>
 					<% } else { %>
@@ -244,7 +250,8 @@
 		var map = new google.maps.Map(document.getElementById('map'), {
 			zoom: 10,
 			center: center,
-			zoomControl: false,
+			gestureHandling: 'greedy',
+			// zoomControl: false,
 			scaleControl: true,
 			streetViewControl: false,
 			mapTypeControl: false,

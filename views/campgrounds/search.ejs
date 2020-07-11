@@ -11,59 +11,72 @@
 				<h4 style="font-weight: bold;"><%= campgrounds.length %> results for "<%= searchTerm %>"</h4>
 		<% }} %>
 		
-		<% campgrounds.forEach(function(campground) { 		%>
-			 <!-- style="display: flex;" -->
-			<div id="campgroundSearchResult"
-				 class="row text-center"
-				 style="border: 1px solid rgb(221, 221, 221); background-color: white;">
-				<div class="thumbnail col-md-3 col-xs-12 col-sm-12">				
-					<img src="<%= campground.image %>" style="height: 20rem;">	
-				</div>
-				<div class="col-md-6 col-xs-12 col-sm-12"> 
-					 <!-- style="height: 100%; position: relative;"> -->
-					<a href="/campgrounds/<%= campground._id %>"><h4 class="text-left"><%= campground.name %></h4></a>
-
-					<% if((campground.comments.length > 0) && (campground.avgScore != null)) { %>
-						<div style="margin-top: 10px; display: flex; align-items: center; width: 100%;">						
-							<span style="font-size: 16px; font-weight: bold; margin-right: 15px;" class="lightGrayColor"><%= campground.avgScore %></span>
-							<% var i = 0; %>
-							<% var fraction = campground.avgScore - campground.avgScore.toFixed(); %>
-							<% for(; i < (campground.avgScore - fraction); i++) { %>
-								<img src="/star-full-icon-16.png"> 
-							<% } %>
-							<% if((i < 5) && (fraction >= 0.3) & (fraction <= 0.7)) %>
-							<% { %>
-								<img src="/star-half-full-icon-16.png"> 
-							<% 	i = i + 1; %>
-							<% } %>
-							<% for(; i < 5; i++) { %>
-								<img src="/star-empty-icon-16.png"> 
-							<% } %>
-							<span style="margin-left: 10px;" styleclass="lightGrayColor">(<%= campground.comments.length %> reviews)</span>
+		<div class="row">
+			<div class="col-md-9 col-sm-12">
+				<% campgrounds.forEach(function(campground) { 		%>
+					 <!-- style="display: flex;" -->
+					<div id="campgroundSearchResult"
+						 class="row text-center"
+						 style="border: 1px solid rgb(221, 221, 221); background-color: white;">
+						<div class="thumbnail col-md-3 col-xs-12 col-sm-12">				
+							<img src="<%= campground.image %>" style="height: 20rem;">	
 						</div>
-					<% } %>
-				
-					<p 	class="text-left" 
-						style="	margin-top: 10px; 
-							  	overflow: hidden;
-							  	text-overflow: ellipsis;
-   								display: -webkit-box;
-   								line-height: 20px;     /* fallback */
-   								max-height: 100px;      /* fallback */
-   								-webkit-line-clamp: 5; /* number of lines to show */
-   								-webkit-box-orient: vertical;">
-						<%= campground.desc %>
-					</p>
-				</div>
-				<div class="col-md-3 hidden-xs hidden-sm" 
-					 style="text-align: right; border-left: 1px solid #ebeced; padding-top: 10px;">
-					<% if(campground.price != null) { %>
-						<p id="price">$<%= campground.price %>/night</p>	
-					<% } %>
-					<a class="btn btn-primary" href="/campgrounds/<%= campground._id %>">Learn more</a>
-				</div>
+						<div class="col-md-6 col-xs-12 col-sm-12"> 
+							 <!-- style="height: 100%; position: relative;"> -->
+							<a href="/campgrounds/<%= campground._id %>"><h4 class="text-left"><%= campground.name %></h4></a>
+
+							<% if((campground.comments.length > 0) && (campground.avgScore != null)) { %>
+								<div style="margin-top: 10px; display: flex; align-items: center; width: 100%;">						
+									<span style="font-size: 16px; font-weight: bold; margin-right: 15px;" class="lightGrayColor"><%= campground.avgScore %></span>
+									<% var i = 1; %>
+									<% for(; i <= campground.avgScore; i++) { %>
+										<img src="/star-full-icon-16.png"> 
+									<% } %>
+									<% if(i <= 5) { %>
+										<% var fraction = campground.avgScore - campground.avgScore.toFixed(); %>
+										<% if(fraction < 0.3) { %>
+											<img src="/star-empty-icon-16.png">
+										<% } else if (fraction <= 0.7) { %> 
+											<img src="/star-half-full-icon-16.png">
+										<% } else { %>
+											<img src="/star-full-icon-16.png">
+										<% } %>
+										<% i = i + 1; %>
+									<% } %>
+									<% for(; i <= 5; i++) { %>
+										<img src="/star-empty-icon-16.png"> 
+									<% } %>
+									<span style="margin-left: 10px;" styleclass="lightGrayColor">(<%= campground.comments.length %> reviews)</span>
+								</div>
+							<% } %>
+
+							<p 	class="text-left" 
+								style="	margin-top: 10px; 
+										overflow: hidden;
+										text-overflow: ellipsis;
+										display: -webkit-box;
+										line-height: 20px;     /* fallback */
+										max-height: 100px;      /* fallback */
+										-webkit-line-clamp: 5; /* number of lines to show */
+										-webkit-box-orient: vertical;">
+								<%= campground.desc %>
+							</p>
+						</div>
+						<div class="col-md-3 hidden-xs hidden-sm" 
+							 style="text-align: right; border-left: 1px solid #ebeced; padding-top: 10px;">
+							<% if(campground.price != null) { %>
+								<p id="price">$<%= campground.price %>/night</p>	
+							<% } %>
+							<a class="btn btn-primary" href="/campgrounds/<%= campground._id %>">Learn more</a>
+						</div>
+					</div>
+				<% }); %> 			
 			</div>
-		<% }); %> 			
+			<div class="col-md-3 hidden-xs hidden-sm" style="margin-top: 10px">			
+				<div id="map"></div>
+			</div>
+		</div>
+
 
 		<!-- see campgrounds.js for how it was implemented as thumbnails -->
 	</div>
@@ -71,5 +84,89 @@
 
  <!-- class="float-right" -->
  <!-- style="display: block" -->
+
+
+<script>
+// <!-- Google Maps API key: AIzaSyAuIfJp9qgrhve0xTQ283gqGB00_Flg8iU -->
+// <!-- Google GeoCoding API key: AIzaSyDP7flZjCFiarELiMe7sGK0KsPY_5C8Wi8 -->
+	
+	var activeInfoWindow = null; 
+	
+  	function initMap() {
+		var campgroundsCount = <%= campgrounds.length  %>;
+		if( campgroundsCount > 0 )
+		{
+			var map = new google.maps.Map(document.getElementById('map'), {
+				zoom: 10,
+				center: {lat: <%= campgrounds[0].lat %>, lng: <%= campgrounds[0].lng %> },
+				gestureHandling: 'greedy',
+				// zoomControl: false,
+				scaleControl: true,
+				streetViewControl: false,
+				mapTypeControl: false,
+				scrollwheel: false
+			});	
+		
+			var bounds = new google.maps.LatLngBounds();
+			
+			<% campgrounds.forEach(function(campground) { 		%>
+				var marker = new google.maps.Marker({
+					position: {lat: <%= campground.lat %>, lng: <%= campground.lng %> },
+					map: map,
+					label: {color: "white", fontSize: "11px", text: "$<%= campground.price %>"}
+				});
+				
+				// Extend the map to include this marker too
+				bounds.extend(marker.position);
+
+				// Info Window
+				var infowindow = new google.maps.InfoWindow();
+					
+				var content = 
+					"<div>" +
+						"<p style='font-weight: bold; font-size: 14px;'><a href='/campgrounds/<%= campground._id %>' target='_blank'><%= campground.name %></a></p>" + 
+						"<% if((campground.avgScore != null) && (campground.avgScore != 0)) { %>" +
+							"<p><span style='font-weight: bold;' class='lightGrayColor'><%= campground.avgScore %></span>   " +
+							"<span class='lightGrayColor'>(<%= campground.comments.length %> reviews)</span></p>" + 
+						"<% } %>" +			
+						"<p>$<%= campground.price %>/night</p>" +
+					"</div>";			
+				
+				google.maps.event.addListener(
+					marker,
+					'click', 
+					( function(marker, content, infoWindow)
+						{ 					
+							return function() 
+							{
+								if(activeInfoWindow != null) 
+									activeInfoWindow.close();
+
+								infoWindow.setContent(content);
+								infoWindow.open(map,marker);
+
+								activeInfoWindow = infoWindow;
+							};
+						}
+					)
+						(marker,content,infowindow)
+				);  
+			
+			<% }); %>
+			
+			// modify the map size & center points
+			if( campgroundsCount > 1 )
+			{
+				map.setCenter(bounds.getCenter());
+				map.panToBounds(bounds);
+				map.fitBounds(bounds);				
+			}
+		}
+	}
+	
+</script>
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAuIfJp9qgrhve0xTQ283gqGB00_Flg8iU&callback=initMap"></script>
+
 
 <%- include("../partials/footer") %>
