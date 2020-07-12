@@ -99,9 +99,9 @@
 					<h4 class="defaultColor" style="font-weight: bold; margin-top: 0px; display: inline;">Reviews</h4>
 					<button onclick="showAddReview(true)" class="btn btn-default pull-right defaultColor"
 						<% if(currentUser == null) { %>
-					   		disabled data-toggle="tooltip" title="Login to write a review"
-					   	<% } else if (campground.comments.findIndex(function(elm){return (elm.author.username == currentUser.username);}) != -1) { %>
-					   		disabled data-toggle="tooltip" title="You already wrote a review"
+							disabled data-toggle="tooltip" title="Login to write a review"
+						<% } else if (campground.comments.findIndex(function(elm){return (elm.author.username == currentUser.username);}) != -1) { %>
+							disabled data-toggle="tooltip" title="You already wrote a review"
 						<% } %>
 					   >
 						Write a review
@@ -114,7 +114,7 @@
 								<img src="/star-full-icon-16.png"> 
 							<% } %>
 							<% if(i <= 5) { %>
-								<% var fraction = avgScore - avgScore.toFixed(); %>
+								<% var fraction = avgScore - Math.trunc(avgScore); %>
 								<% if(fraction < 0.3) { %>
 									<img src="/star-empty-icon-16.png">
 								<% } else if (fraction <= 0.7) { %> 

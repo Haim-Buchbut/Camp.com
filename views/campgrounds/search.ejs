@@ -33,7 +33,7 @@
 										<img src="/star-full-icon-16.png"> 
 									<% } %>
 									<% if(i <= 5) { %>
-										<% var fraction = campground.avgScore - campground.avgScore.toFixed(); %>
+										<% var fraction = campground.avgScore - Math.trunc(campground.avgScore); %>
 										<% if(fraction < 0.3) { %>
 											<img src="/star-empty-icon-16.png">
 										<% } else if (fraction <= 0.7) { %> 
