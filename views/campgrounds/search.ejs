@@ -14,10 +14,9 @@
 		<div class="row">
 			<div class="col-md-9 col-sm-12">
 				<% campgrounds.forEach(function(campground) { 		%>
-					 <!-- style="display: flex;" -->
 					<div id="campgroundSearchResult"
 						 class="row text-center"
-						 style="border: 1px solid rgb(221, 221, 221); background-color: white;">
+						 style="background-color: white;">
 						<div class="thumbnail col-md-3 col-xs-12 col-sm-12">				
 							<img src="<%= campground.image %>" style="height: 20rem;">	
 						</div>
@@ -61,6 +60,12 @@
 										-webkit-box-orient: vertical;">
 								<%= campground.desc %>
 							</p>
+							<a style="text-decoration: none; cursor: pointer;">
+								<div id="showAmenities<%= campground._id %>" 
+									style="font-size: 14px; color: #337ab7; text-align: left;"
+									onclick="showAmenities('<%= campground._id %>')">
+								Show Amenities
+							</div></a>
 						</div>
 						<div class="col-md-3 hidden-xs hidden-sm" 
 							 style="text-align: right; border-left: 1px solid #ebeced; padding-top: 10px;">
@@ -70,6 +75,66 @@
 							<a class="btn btn-primary" href="/campgrounds/<%= campground._id %>">Learn more</a>
 						</div>
 					</div>
+
+					<% if(campground.amenities != null) { %>
+						<!-- <div style="background-color: white; padding-left: 15px;">
+							<h4 class="defaultColor" 
+								style="font-weight: bold;">
+								
+							</h4>
+						</div> -->
+						<div id="amenitiesHeader<%= campground._id %>"
+							 class="row"
+							 style="background-color: white; padding: 0px; margin-top: 0px; display: none">					
+							<div class="col-md-12 col-sm-12" style="padding: 15px 15px 10px 15px;">
+								<span style="font-size: 16px; color: #337ab7; ">Amenities</span>
+							</div>
+						</div>
+						<div id="amenitiesDetails<%= campground._id %>"
+							 class="row"
+							 style="background-color: white; padding: 0px; margin-top: 0px; display: none;">					
+							<div class="col-md-4 col-sm-12" style="padding-left: 15px;">						
+								<ul class="amenityList">
+										<li class="amenityListItem">
+											<div class="amenityListItemIcon"><i class="fas fa-toilet fa-lg" style="color: <%= campground.amenities.toilets? "green" : "#D0D0D0" %>"></i></div><span>Toilets</span>
+										</li>
+										<li class="amenityListItem">
+											<div class="amenityListItemIcon"><i class="fas fa-shower fa-lg" style="color: <%= campground.amenities.showers? "green" : "#D0D0D0" %>"></i></div><span>Showers</span>
+										</li>
+										<li class="amenityListItem">
+											<div class="amenityListItemIcon"><i class="fas fa-faucet fa-lg" style="color: <%= campground.amenities.drinkingWater? "green" : "#D0D0D0" %>"></i></div><span>Drinking Water</span>
+									</li>
+								</ul>
+							</div>
+							<div class="col-md-4 col-sm-12" style="padding-left: 15px;">						
+								<ul class="amenityList">
+										<li class="amenityListItem">
+											<div class="amenityListItemIcon"><i class="fab fa-gripfire fa-lg" style="color: <%= campground.amenities.fireAllowed? "green" : "#D0D0D0" %>"></i></div><span>Fire allowed</span>
+										</li>
+										<li class="amenityListItem">
+											<div class="amenityListItemIcon"><i class="fas fa-dog fa-lg" style="color: <%= campground.amenities.petsAllowed? "green" : "#D0D0D0" %>"></i></div><span>Pets allowed</span>
+										</li>
+										<li class="amenityListItem">
+											<div class="amenityListItemIcon"><i class="fas fa-map-signs fa-lg" style="color: <%= campground.amenities.mapSigns? "green" : "#D0D0D0" %>"></i></div><span>Signs</span>
+									</li>
+								</ul>
+							</div>
+							<div class="col-md-4 col-sm-12" style="padding-left: 15px;">						
+								<ul class="amenityList">
+										<li class="amenityListItem">
+											<div class="amenityListItemIcon"><i class="fab fa-accessible-icon fa-lg" style="color: <%= campground.amenities.accessible? "green" : "#D0D0D0" %>"></i></div><span>Accessible</span>
+										</li>
+										<li class="amenityListItem">
+											<div class="amenityListItemIcon"><i class="fas fa-parking fa-lg" style="color: <%= campground.amenities.parking? "green" : "#D0D0D0" %>"></i></div><span>Parking</span>
+										</li>
+										<li class="amenityListItem">
+											<div class="amenityListItemIcon"><i class="fas fa-wifi fa-lg" style="color: <%= campground.amenities.wifi? "green" : "#D0D0D0" %>"></i></div><span>WiFi</span>
+									</li>
+								</ul>
+							</div>
+						</div>
+					<% } %>
+					<div style="width: 100%; height: 20px;"> </div>
 				<% }); %> 			
 			</div>
 			<div class="col-md-3 hidden-xs hidden-sm" style="margin-top: 10px">			
@@ -87,11 +152,23 @@
 
 
 <script>
+	function showAmenities(campgroundId) {
+		console.log("showAmenities: ID is " + campgroundId);
+
+		if(document.getElementById("amenitiesDetails" + campgroundId).style.display === "none") {
+			console.log("Show it!");
+			document.getElementById("amenitiesDetails" + campgroundId).style.display = "block"; 										document.getElementById("amenitiesHeader" + campgroundId).style.display = "block";
+			document.getElementById("showAmenities" + campgroundId).innerHTML = "Hide Amenities";			
+		} else {
+			console.log("Hide it!");
+			document.getElementById("amenitiesDetails" + campgroundId).style.display = "none"; 											document.getElementById("amenitiesHeader" + campgroundId).style.display = "none";
+			document.getElementById("showAmenities" + campgroundId).innerHTML = "Show Amenities";			
+		}	
+	}
+	
 // <!-- Google Maps API key: AIzaSyAuIfJp9qgrhve0xTQ283gqGB00_Flg8iU -->
 // <!-- Google GeoCoding API key: AIzaSyDP7flZjCFiarELiMe7sGK0KsPY_5C8Wi8 -->
-	
 	var activeInfoWindow = null; 
-	
   	function initMap() {
 		var campgroundsCount = <%= campgrounds.length  %>;
 		if( campgroundsCount > 0 )
